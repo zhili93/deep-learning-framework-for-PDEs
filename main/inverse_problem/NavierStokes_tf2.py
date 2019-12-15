@@ -57,6 +57,7 @@ class PhysicsInformedNN(tf.keras.Model):
         self.lambda_2 = tf.Variable([0], dtype=tf.float32)
     @tf.function
     def call(self, X):
+        #calculate u, v, p, f_u, f_v
 
         x = tf.convert_to_tensor(X[:,0:1])
         y = tf.convert_to_tensor(X[:,1:2])
@@ -119,7 +120,7 @@ class PhysicsInformedNN(tf.keras.Model):
         return u, v, p, f_u, f_v
 
     def loss_function(self,u_p, v_p, p_p, f_u_p, f_v_p, u,v):
-
+        #calculate loss function
         loss = tf.reduce_sum(tf.square(u - u_p)) + \
                     tf.reduce_sum(tf.square(v - v_p)) + \
                     tf.reduce_sum(tf.square(f_u_p)) + \
@@ -339,7 +340,7 @@ if __name__ == "__main__":
 
     X_test = np.concatenate([x_star, y_star, t_star], 1)
 
-    train(model, 200000, X_train, u_train, v_train,X_star, X_test, p_star)
+    train(model, 50000, X_train, u_train, v_train,X_star, X_test, p_star)
 
     test(model, X_test, u_star, v_star, p_star)
 
@@ -518,35 +519,5 @@ if __name__ == "__main__":
     ax.set_ylabel('$y$')
     ax.set_aspect('equal', 'box')
     ax.set_title('Exact pressure', fontsize = 10)
-
-
-    ######## Row 3: Table #######################
-    # gs3 = gridspec.GridSpec(1, 2)
-    # gs3.update(top=1-1/2, bottom=0.0, left=0.0, right=1.0, wspace=0)
-    # ax = plt.subplot(gs3[:, :])
-    # ax.axis('off')
-
-    # s = r'$\begin{tabular}{|c|c|}';
-    # s = s + r' \hline'
-    # s = s + r' Correct PDE & $\begin{array}{c}'
-    # s = s + r' u_t + (u u_x + v u_y) = -p_x + 0.01 (u_{xx} + u_{yy})\\'
-    # s = s + r' v_t + (u v_x + v v_y) = -p_y + 0.01 (v_{xx} + v_{yy})'
-    # s = s + r' \end{array}$ \\ '
-    # s = s + r' \hline'
-    # s = s + r' Identified PDE (clean data) & $\begin{array}{c}'
-    # s = s + r' u_t + %.3f (u u_x + v u_y) = -p_x + %.5f (u_{xx} + u_{yy})' % (model.lambda_1.numpy(), model.lambda_2.numpy())
-    # s = s + r' \\'
-    # s = s + r' v_t + %.3f (u v_x + v v_y) = -p_y + %.5f (v_{xx} + v_{yy})' % (model.lambda_1.numpy(), model.lambda_2.numpy())
-    # s = s + r' \end{array}$ \\ '
-    # s = s + r' \hline'
-    # s = s + r' Identified PDE (1\% noise) & $\begin{array}{c}'
-    # s = s + r' u_t + %.3f (u u_x + v u_y) = -p_x + %.5f (u_{xx} + u_{yy})' % (lambda_1_value_noisy.numpy(), lambda_2_value_noisy.numpy())
-    # s = s + r' \\'
-    # s = s + r' v_t + %.3f (u v_x + v v_y) = -p_y + %.5f (v_{xx} + v_{yy})' % (lambda_1_value_noisy.numpy(), lambda_2_value_noisy.numpy())
-    # s = s + r' \end{array}$ \\ '
-    # s = s + r' \hline'
-    # s = s + r' \end{tabular}$'
-
-    # ax.text(0.015,0.0,s)
 
     savefig('./figures/NavierStokes_prediction'+str(learning_rate))
