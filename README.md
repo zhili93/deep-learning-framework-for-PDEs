@@ -6,7 +6,7 @@ Directory
 
 -Utilities (contains useful plotting function) <br />
 -Main<br />
-        -forward_problem <br />
+    -forward_problem <br />
         -MySch_Final.py (TensorFlow 2.0 implementation for forward problem)<br />
         -Data (training data for the forward problem)<br />
         -Output (outputs from the neural network model)<br />
